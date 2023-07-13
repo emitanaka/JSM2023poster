@@ -1,0 +1,337 @@
+---
+title: Automated Visualisation of Experimental Designs
+font_family: "Gill Sans"
+titletext_fontfamily: "Gill Sans"
+poster_height: "33.1in"
+poster_width: "46.8in"
+primary_colour: "#F5EDDE"
+secondary_colour: "#fff"
+accent_colour: "#BE830E"
+titlebox_bordercol: "#F5EDDE"
+titlebox_borderwidth: "1cm"
+title_textcol: "black"
+title_textsize: "75pt"
+author_textsize: "60pt"
+#affiliation_textsize: "70pt"
+author_textcol: black
+affiliation_textcol: black
+body_bgcol: "#ffffff"
+body_textsize: "45px"
+body_textcol: "#000000"
+column_numbers: 4
+column_margins: "0.5in"
+columnline_col: "#F5EDDE"
+sectitle_textcol: "black"
+sectitle_textsize: "50pt"
+author:
+  - name: Emi Tanaka
+    orcid: '0000-0002-1455-259X'
+affiliation:
+  - address: Biological Data Science Institute, Australian National University
+  - address: Research School of Finance, Actuarial Studies and Statistics, Australian National University
+
+logoright_name: logos/deggust.png
+logoleft_name: logos/edibble.png
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
+output: 
+  posterdown::posterdown_html:
+    highlight: tango
+    self_contained: false
+#bibliography: packages.bib
+# pagedown::chrome_print("jsm-poster.Rmd")
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = "center", fig.width = 8, fig.height = 3.8)
+asciicast::init_knitr_engine(
+  startup = quote({
+      library(edibble)
+      options(tibble.width = Inf,
+        tibble.print_max = 6)
+    }),
+  echo = FALSE,
+  echo_input = FALSE
+  )
+
+fa_list <- function(x) {
+  icons <- names(x)
+  items <- glue::glue('<li><span class="fa-li"><i class="{icons}"></i></span> {x}</li>')
+  paste('<ul class="fa-ul">', 
+        paste(items, collapse = "\n"),
+        "</ul>", sep = "\n")
+}
+library(ggplot2)
+theme_set(theme(text = element_text(size = 28)))
+```
+
+```{css, echo = FALSE}
+code {
+  color: #BE830E;
+}
+/* trick to remove unwanted "," */
+#author sup {
+  visibility: hidden;
+}
+
+#author sup a {
+  visibility: visible;
+}
+
+pre.sourceCode.r {
+  margin: 0 0;
+  width: 100%;
+  padding-left: 4mm;
+}
+
+div.sourceCode {
+    margin: 0.1em 0;
+}
+
+pre > code.sourceCode > span {
+    display: inline-block;
+    line-height: 1;
+}
+
+code.sourceCode.r {
+    background-color: transparent;
+    font-size: 27pt;
+    border-radius: 2mm;
+}
+
+img {
+  margin-top: 0;
+}
+
+strong {
+  color: #BE830E;
+}
+
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    margin-left: 1em;
+}
+
+h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+```
+
+# The Grammar of Experimental Designs
+
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-laptop-code" = "A computational framework that treats experimental design as an object that is declaratively defined by a series of composable functions.",
+              "fab fa-r-project" = "Implemented in the `edibble` R-package.")))
+```
+  
+```{r edibble}
+library(edibble)
+```
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-sign-out-alt" = "The final output is an **e**xperimental **d**esign table (or t**ibble**).")))
+```
+
+# Completely Randomised Design
+
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-utensils" = "Suppose we have an experiment to compare high-carb and low-carb diets on the weight.")))
+```
+
+- We can gather twenty subjects in total.
+
+
+```{r crd, results = "hide"}
+crd <- design("Diet experiment") %>% 
+  set_units(subject = 20) %>% 
+  set_trts(diet = c("Low-carb", "High-carb")) %>% 
+  allot_trts(diet ~ subject) %>% 
+  assign_trts("random", seed = 2023) %>% 
+  serve_table()
+```
+
+# Randomised Complete Block Design
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-venus-mars" = "We may recognise that _sex_ is an influencing factor on the response.",
+              "fas fa-square" = "We may choose to block subjects by sex.")))
+```
+
+- We assign equal number of subjects for each sex.
+
+
+```{r rcbd, results = "hide"}
+rcbdx <- design("Diet experiment by sex") %>% 
+  set_units(sex = c("F", "M"),
+            subject = 20) %>% 
+  allot_units(sex ~ subject) %>% 
+  assign_units("systematic") %>% 
+  set_trts(diet = c("Low-carb", "High-carb")) %>% 
+  allot_trts(diet ~ subject) %>% 
+  assign_trts("random", seed = 2023)
+```
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-project-diagram" = "At this stage, the edibble design object is in a network form (a pair of directed acyclic graphs).")))
+```
+
+```{r rcbd-out, results = "hide", echo = -1}
+rcbdx <- design("Diet experiment by sex") %>% 
+  set_units(sex = c("F", "M"),
+            subject = 20) %>% 
+  allot_units(sex ~ subject) %>% 
+  assign_units("systematic") %>% 
+  set_trts(diet = c("Low-carb", "High-carb")) %>% 
+  allot_trts(diet ~ subject) %>% 
+  assign_trts("random", seed = 2023)
+
+rcbdx
+```
+
+```{asciicast rcbd-out, out.width = "100%"}
+```
+
+- The same _unit structure_ can alternatively be defined as below.
+
+```{r rcbd2}
+rcbd_alt <- design("Diet experiment by sex") %>% 
+  set_units(sex = c("F", "M"),
+            subject = nested_in(sex, 10)) 
+```
+
+# Split-Plot Design
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-running" = "The experimenter may wish to also see the effect of exercise in addition to the diet.")))
+```
+
+- The _treatment structure_ is then $2\times 2$ factorial. 
+- The experimenter has a constraint on allocation of exercise -- it has to be done by session, which comprises of five subjects of one sex. 
+- Different diets can be assigned to each subject.
+- The experimenter conducts two sessions for each sex. 
+- This constraint in the allocation of treatment results in a split-plot design.
+
+```{r spd, results = "hide"}
+spd <- design("Diet & exercise experiment") %>%
+  set_units(sex = c("F", "M"), 
+            session = nested_in(sex, 2),
+            subject = nested_in(session, 5)) %>%
+  set_trts(diet = c("Low-carb", "High-carb"),
+           exercise = c("Intense", "Light")) %>%
+  allot_trts(diet ~ subject,
+             exercise ~ session) %>% 
+  assign_trts("random", seed = 2023) %>% 
+  serve_table()
+```
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-table" = "The output here is in the tabular form.")))
+```
+
+<br>
+
+```{r spd-out, results = "hide", echo = -1}
+spd <- design("Diet & exercise experiment") %>%
+  set_units(sex = c("F", "M"), 
+            session = nested_in(sex, 2),
+            subject = nested_in(session, 5)) %>%
+  set_trts(diet = c("Low-carb", "High-carb"),
+           exercise = c("Intense", "Light")) %>%
+  allot_trts(diet ~ subject,
+             exercise ~ session) %>% 
+  assign_trts("random", seed = 1) %>% 
+  serve_table()
+spd
+```
+
+
+
+```{asciicast spd-out, out.width = "100%"}
+```
+
+
+
+# [Visualising Experimental Designs]{.anu-gold} {style="background-color:#F5EDDE;"}
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-lightbulb" = "We leverage the structure that is already specified in an edibble design object.",
+  "fab fa-r-project" = "Implemented in the `deggust` R-package.")))
+```
+
+
+```{r deggust}
+library(deggust)
+```
+
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-utensils" = "To degust is to savor appreciatively.", 
+              "fas fa-crosshairs" = "To deggust is to visualise edibble design objects appreciatively.", 
+              "fas fa-sign-out-alt" = "The final output is a **d**esign of **e**xperiments as a **gg**plot object.")))
+```
+
+::: {style="background-color:#F5EDDE; padding: 10px; font-size: 1.4em; color:#BE830E;text-align: center;"}
+
+Visualise your edibble design using only one command: 
+
+`autoplot()`
+
+:::
+## Completely Randomised Design
+
+
+```{r, eval = FALSE}
+autoplot(crd)
+```
+
+```{r plot-crd, echo = FALSE, fig.height = 4.5}
+autoplot(crd) + theme(text = element_text(size = 28), plot.background = element_rect(fill = "#F5EDDE", color = "transparent"))
+```
+
+
+## Randomised Complete Block Design
+
+- Customise using `ggplot2` functions!
+
+```{r, eval = FALSE}
+autoplot(serve_table(rcbdx)) + 
+  ggplot2::scale_fill_brewer(palette = 2)
+```
+
+```{r plot-rcbd, echo = FALSE, fig.width = 10, fig.height = 4}
+autoplot(serve_table(rcbdx)) + theme(text = element_text(size = 28), plot.background = element_rect(fill = "#F5EDDE", color = "transparent")) + 
+  ggplot2::scale_fill_brewer(palette = 2)
+```
+
+## Split-Plot Design
+
+
+```{r, eval = FALSE}
+autoplot(spd)
+```
+
+```{r plot-spd, echo = FALSE, fig.width = 10, fig.height = 7.5}
+autoplot(spd) + theme(text = element_text(size = 28), plot.background = element_rect(fill = "#F5EDDE", color = "transparent"))
+```
+
+# See More
+
+- `edibble` and `deggust` R-packages are available on CRAN or get the latest development at <i class='fab fa-github'></i> emitanaka/edibble and <i class='fab fa-github'></i> emitanaka/deggust.
+- Find the HTML version of this poster at bit.ly/XXX.
+- For more information and references, see https://emitanaka.org/research/edibble-design.
+
+## Acknowledgement
+
+This poster was made using `posterdown` R-package.
