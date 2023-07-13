@@ -64,6 +64,8 @@ library(ggplot2)
 theme_set(theme(text = element_text(size = 28)))
 ```
 
+<img src="logos/anu-logo.png" style="position:absolute; top: 5%; left: 10%;width: 10%;">
+
 ```{css, echo = FALSE}
 code {
   color: #BE830E;
