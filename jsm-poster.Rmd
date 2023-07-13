@@ -252,7 +252,6 @@ spd <- design("Diet & exercise experiment") %>%
 cat(fa_list(c("fas fa-table" = "The output here is in the tabular form.")))
 ```
 
-<br>
 
 ```{r spd-out, results = "hide", echo = -1}
 spd <- design("Diet & exercise experiment") %>%
