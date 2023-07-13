@@ -31,7 +31,7 @@ affiliation:
   - address: Research School of Finance, Actuarial Studies and Statistics, Australian National University
 
 logoright_name: logos/deggust-anu.png
-logoleft_name: logos/edibble-empty.png
+logoleft_name: logos/edibble-qr.png
 knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
 output: 
   posterdown::posterdown_html:
