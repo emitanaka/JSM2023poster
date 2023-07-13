@@ -30,8 +30,8 @@ affiliation:
   - address: Biological Data Science Institute, Australian National University
   - address: Research School of Finance, Actuarial Studies and Statistics, Australian National University
 
-logoright_name: logos/deggust.png
-logoleft_name: logos/edibble.png
+logoright_name: logos/deggust-anu.png
+logoleft_name: logos/edibble-empty.png
 knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
 output: 
   posterdown::posterdown_html:
@@ -64,9 +64,17 @@ library(ggplot2)
 theme_set(theme(text = element_text(size = 28)))
 ```
 
-<img src="logos/anu-logo.png" style="position:absolute; top: 5%; left: 10%;width: 10%;">
 
 ```{css, echo = FALSE}
+.logo_left {
+  width: 25%;
+}
+.logo_right {
+  width: 25%;
+}
+.poster_title {
+  width: 50%;
+}
 code {
   color: #BE830E;
 }
@@ -112,7 +120,7 @@ ul {
     display: block;
     list-style-type: disc;
     margin-block-start: 1em;
-    margin-block-end: 1em;
+    margin-block-end: 0.7em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     padding-inline-start: 40px;
@@ -185,6 +193,7 @@ rcbdx <- design("Diet experiment by sex") %>%
   allot_trts(diet ~ subject) %>% 
   assign_trts("random", seed = 2023)
 ```
+
 
 ```{r, echo = FALSE, results = "asis"}
 cat(fa_list(c("fas fa-project-diagram" = "At this stage, the edibble design object is in a network form (a pair of directed acyclic graphs).")))
@@ -331,7 +340,7 @@ autoplot(spd) + theme(text = element_text(size = 28), plot.background = element_
 # See More
 
 - `edibble` and `deggust` R-packages are available on CRAN or get the latest development at <i class='fab fa-github'></i> emitanaka/edibble and <i class='fab fa-github'></i> emitanaka/deggust.
-- Find the HTML version of this poster at bit.ly/XXX.
+- Find the HTML version of this poster at https://emitanaka.org/JSM2023poster.
 - For more information and references, see https://emitanaka.org/research/edibble-design.
 
 ## Acknowledgement
