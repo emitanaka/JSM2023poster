@@ -1,14 +1,14 @@
 ---
 title: Automated Visualisation of Experimental Designs
-font_family: "Gill Sans"
-titletext_fontfamily: "Gill Sans"
+#font_family: "Gill Sans"
+#titletext_fontfamily: "Gill Sans"
 poster_height: "33.1in"
 poster_width: "46.8in"
 primary_colour: "#F5EDDE"
 secondary_colour: "#fff"
 accent_colour: "#BE830E"
 titlebox_bordercol: "#F5EDDE"
-titlebox_borderwidth: "1cm"
+#titlebox_borderwidth: "1cm"
 title_textcol: "black"
 title_textsize: "75pt"
 author_textsize: "60pt"
@@ -22,7 +22,7 @@ column_numbers: 4
 column_margins: "0.5in"
 columnline_col: "#F5EDDE"
 sectitle_textcol: "black"
-sectitle_textsize: "50pt"
+sectitle_textsize: "45pt"
 author:
   - name: Emi Tanaka
     orcid: '0000-0002-1455-259X'
@@ -38,7 +38,7 @@ output:
     highlight: tango
     self_contained: false
 #bibliography: packages.bib
-# pagedown::chrome_print("jsm-poster.Rmd")
+# pagedown::chrome_print("index.html", format = "pdf", output = "jsm-poster.pdf")
 ---
 
 ```{r setup, include=FALSE}
@@ -52,7 +52,6 @@ asciicast::init_knitr_engine(
   echo = FALSE,
   echo_input = FALSE
   )
-
 fa_list <- function(x) {
   icons <- names(x)
   items <- glue::glue('<li><span class="fa-li"><i class="{icons}"></i></span> {x}</li>')
@@ -66,6 +65,9 @@ theme_set(theme(text = element_text(size = 28)))
 
 
 ```{css, echo = FALSE}
+#title, body {
+  font-family: Gill Sans;
+}
 .logo_left {
   width: 25%;
 }
@@ -104,7 +106,7 @@ pre > code.sourceCode > span {
 
 code.sourceCode.r {
     background-color: transparent;
-    font-size: 27pt;
+    font-size: 26pt;
     border-radius: 2mm;
 }
 
@@ -125,6 +127,12 @@ ul {
     margin-inline-end: 0px;
     padding-inline-start: 40px;
     margin-left: 1em;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+    margin-bottom: 0.5em;
 }
 
 h2 {
@@ -158,10 +166,9 @@ cat(fa_list(c("fas fa-sign-out-alt" = "The final output is an **e**xperimental *
 
 
 ```{r, echo = FALSE, results = "asis"}
-cat(fa_list(c("fas fa-utensils" = "Suppose we have an experiment to compare high-carb and low-carb diets on the weight.")))
+cat(fa_list(c("fas fa-utensils" = "Suppose we have an experiment to compare high-carb and low-carb diets on the weight.",
+              "fas fa-caret-right" = "We can gather twenty subjects in total.")))
 ```
-
-- We can gather twenty subjects in total.
 
 
 ```{r crd, results = "hide"}
@@ -177,10 +184,10 @@ crd <- design("Diet experiment") %>%
 
 ```{r, echo = FALSE, results = "asis"}
 cat(fa_list(c("fas fa-venus-mars" = "We may recognise that _sex_ is an influencing factor on the response.",
-              "fas fa-square" = "We may choose to block subjects by sex.")))
+              "fas fa-caret-right" = "We may choose to block subjects by sex.",
+              "fas fa-caret-right" = "We assign equal number of subjects for each sex.",
+              "fas fa-caret-right" = "We modify the code to take this into account.")))
 ```
-
-- We assign equal number of subjects for each sex.
 
 
 ```{r rcbd, results = "hide"}
@@ -212,10 +219,24 @@ rcbdx <- design("Diet experiment by sex") %>%
 rcbdx
 ```
 
-```{asciicast rcbd-out, out.width = "100%"}
+```{asciicast, out.width = "100%"}
+#' Cols: 40
+rcbdx <- design("Diet experiment by sex") %>% 
+  set_units(sex = c("F", "M"),
+            subject = 20) %>% 
+  allot_units(sex ~ subject) %>% 
+  assign_units("systematic") %>% 
+  set_trts(diet = c("Low-carb", "High-carb")) %>% 
+  allot_trts(diet ~ subject) %>% 
+  assign_trts("random", seed = 2023)
+
+rcbdx
 ```
 
-- The same _unit structure_ can alternatively be defined as below.
+```{r, echo = FALSE, results = "asis"}
+cat(fa_list(c("fas fa-caret-right" = "The same _unit structure_ can alternatively be defined as below.")))
+```
+
 
 ```{r rcbd2}
 rcbd_alt <- design("Diet experiment by sex") %>% 
@@ -226,14 +247,14 @@ rcbd_alt <- design("Diet experiment by sex") %>%
 # Split-Plot Design
 
 ```{r, echo = FALSE, results = "asis"}
-cat(fa_list(c("fas fa-running" = "The experimenter may wish to also see the effect of exercise in addition to the diet.")))
+cat(fa_list(c("fas fa-running" = "The experimenter may wish to also see the effect of exercise in addition to the diet.",
+              "fas fa-caret-right" = "This means that we have two treatment factors with two levels.",
+              "fas fa-caret-right" = "The _treatment structure_ is then $2\\times 2$ factorial.",
+              "fas fa-caret-right" = "The experimenter has a constraint on allocation of exercise -- it has to be done by session, which comprises of five subjects of one sex.",
+              "fas fa-caret-right" = "Different diets can be assigned to each subject.",
+              "fas fa-caret-right" = "The experimenter conducts two sessions for each sex.",
+              "fas fa-caret-right" = "This constraint in the allocation of treatment results in a split-plot design.")))
 ```
-
-- The _treatment structure_ is then $2\times 2$ factorial. 
-- The experimenter has a constraint on allocation of exercise -- it has to be done by session, which comprises of five subjects of one sex. 
-- Different diets can be assigned to each subject.
-- The experimenter conducts two sessions for each sex. 
-- This constraint in the allocation of treatment results in a split-plot design.
 
 ```{r spd, results = "hide"}
 spd <- design("Diet & exercise experiment") %>%
@@ -249,7 +270,7 @@ spd <- design("Diet & exercise experiment") %>%
 ```
 
 ```{r, echo = FALSE, results = "asis"}
-cat(fa_list(c("fas fa-table" = "The output here is in the tabular form.")))
+cat(fa_list(c("fas fa-table" = "The output here is in a tabular form.")))
 ```
 
 
@@ -269,7 +290,19 @@ spd
 
 
 
-```{asciicast spd-out, out.width = "100%"}
+```{asciicast out.width = "100%"}
+#' Cols: 55
+spd <- design("Diet & exercise experiment") %>%
+  set_units(sex = c("F", "M"), 
+            session = nested_in(sex, 2),
+            subject = nested_in(session, 5)) %>%
+  set_trts(diet = c("Low-carb", "High-carb"),
+           exercise = c("Intense", "Light")) %>%
+  allot_trts(diet ~ subject,
+             exercise ~ session) %>% 
+  assign_trts("random", seed = 1) %>% 
+  serve_table()
+spd
 ```
 
 
@@ -292,7 +325,7 @@ cat(fa_list(c("fas fa-utensils" = "To degust is to savor appreciatively.",
               "fas fa-sign-out-alt" = "The final output is a **d**esign of **e**xperiments as a **gg**plot object.")))
 ```
 
-::: {style="background-color:#F5EDDE; padding: 10px; font-size: 1.4em; color:#BE830E;text-align: center;"}
+::: {style="background-color:#F5EDDE; padding: 10px; font-size: 1.3em; color:#BE830E;text-align: center;"}
 
 Visualise your edibble design using only one command: 
 

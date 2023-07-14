@@ -16,8 +16,6 @@ Font-awesome icons ie github or twitter
 <!--
 Google fonts api stuff
 -->
-<link href='https://fonts.googleapis.com/css?family=Gill Sans' rel='stylesheet'>
-<link href='https://fonts.googleapis.com/css?family=Gill Sans' rel='stylesheet'>
 
 
 
@@ -102,7 +100,7 @@ width: 46.8in;
 height: 33.1in;
 padding: 0;
 text-align: justify;
-font-family: Gill Sans;
+font-family: Palatino;
 }
 .poster_wrap {
 width: 46.8in;
@@ -114,7 +112,7 @@ width: 46.8in;
 height: calc(33.1in * 0.15);
 overflow: hidden;
 background-color: #F5EDDE;
-border: 1cm solid #fff;
+border: 0 solid #fff;
 }
 .logo_left {
 float: left;
@@ -146,7 +144,7 @@ transform: translateY(-50%);
 -webkit-transform: translateY(-50%);
 }
 #title {
-font-family: Gill Sans;
+font-family: Palatino;
 }
 /* unvisited link */
 a:link {
@@ -185,9 +183,9 @@ column-rule-style: dashed;
 -webkit-column-rule-color: #F5EDDE;
 -moz-column-rule-color: #F5EDDE;
 column-rule-color: #F5EDDE;
-column-gap: 1cm;
-padding-left: calc(1cm / 2);
-padding-right: calc(1cm / 2);
+column-gap: 1em;
+padding-left: 0.5em;
+padding-right: 0.5em;
 height: 100%;
 color: #000000
 background-color: #ffffff;
@@ -199,7 +197,7 @@ border: 0;
 font-weight: normal;
 }
 .poster_body_wrap{
-width: calc(46.8in + 1cm + 1cm);
+width: calc(46.8in + 0 + 0);
 height: calc(33.1in * 0.83);
 padding-top: calc(33.1in * 0.005);
 padding-bottom: calc(33.1in * 0.01);
@@ -233,7 +231,7 @@ margin-bottom: 0;
 .poster_body h1 {
 text-align: center;
 color: black;
-font-size: 50pt;
+font-size: 45pt;
 border: 2mm solid #F5EDDE;
 background-color: #F5EDDE;
 border-radius: 4mm 0mm;
@@ -359,6 +357,9 @@ font-size: 20pt;
 <div class='poster_body_wrap'>
 <div class='poster_body'>
 <style type="text/css">
+#title, body {
+  font-family: Gill Sans;
+}
 .logo_left {
   width: 25%;
 }
@@ -397,7 +398,7 @@ pre > code.sourceCode > span {
 
 code.sourceCode.r {
     background-color: transparent;
-    font-size: 27pt;
+    font-size: 26pt;
     border-radius: 2mm;
 }
 
@@ -418,6 +419,12 @@ ul {
     margin-inline-end: 0px;
     padding-inline-start: 40px;
     margin-left: 1em;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+    margin-bottom: 0.5em;
 }
 
 h2 {
@@ -453,9 +460,9 @@ h2 {
 <li>
 <span class="fa-li"><i class="fas fa-utensils"></i></span> Suppose we have an experiment to compare high-carb and low-carb diets on the weight.
 </li>
-</ul>
-<ul>
-<li>We can gather twenty subjects in total.</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> We can gather twenty subjects in total.
+</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>crd <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">&quot;Diet experiment&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">set_units</span>(<span class="at">subject =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span> </span>
@@ -471,11 +478,14 @@ h2 {
 <span class="fa-li"><i class="fas fa-venus-mars"></i></span> We may recognise that <em>sex</em> is an influencing factor on the response.
 </li>
 <li>
-<span class="fa-li"><i class="fas fa-square"></i></span> We may choose to block subjects by sex.
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> We may choose to block subjects by sex.
 </li>
-</ul>
-<ul>
-<li>We assign equal number of subjects for each sex.</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> We assign equal number of subjects for each sex.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> We modify the code to take this into account.
+</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>rcbdx <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">&quot;Diet experiment by sex&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">set_units</span>(<span class="at">sex =</span> <span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>),</span>
@@ -491,9 +501,11 @@ h2 {
 </li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>rcbdx</span></code></pre></div>
-<p><img src="index_files/figure-html/rcbd-out.svg" width="100%" style="display: block; margin: auto;" /></p>
-<ul>
-<li>The same <em>unit structure</em> can alternatively be defined as below.</li>
+<p><img src="index_files/figure-html/unnamed-chunk-7.svg" width="100%" style="display: block; margin: auto;" /></p>
+<ul class="fa-ul">
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> The same <em>unit structure</em> can alternatively be defined as below.
+</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>rcbd_alt <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">&quot;Diet experiment by sex&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">set_units</span>(<span class="at">sex =</span> <span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>),</span>
@@ -505,13 +517,24 @@ h2 {
 <li>
 <span class="fa-li"><i class="fas fa-running"></i></span> The experimenter may wish to also see the effect of exercise in addition to the diet.
 </li>
-</ul>
-<ul>
-<li>The <em>treatment structure</em> is then <span class="math inline">\(2\times 2\)</span> factorial.</li>
-<li>The experimenter has a constraint on allocation of exercise – it has to be done by session, which comprises of five subjects of one sex.</li>
-<li>Different diets can be assigned to each subject.</li>
-<li>The experimenter conducts two sessions for each sex.</li>
-<li>This constraint in the allocation of treatment results in a split-plot design.</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> This means that we have two treatment factors with two levels.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> The <em>treatment structure</em> is then <span class="math inline">\(2\times 2\)</span> factorial.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> The experimenter has a constraint on allocation of exercise – it has to be done by session, which comprises of five subjects of one sex.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> Different diets can be assigned to each subject.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> The experimenter conducts two sessions for each sex.
+</li>
+<li>
+<span class="fa-li"><i class="fas fa-caret-right"></i></span> This constraint in the allocation of treatment results in a split-plot design.
+</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>spd <span class="ot">&lt;-</span> <span class="fu">design</span>(<span class="st">&quot;Diet &amp; exercise experiment&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">set_units</span>(<span class="at">sex =</span> <span class="fu">c</span>(<span class="st">&quot;F&quot;</span>, <span class="st">&quot;M&quot;</span>), </span>
@@ -525,11 +548,11 @@ h2 {
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="fu">serve_table</span>()</span></code></pre></div>
 <ul class="fa-ul">
 <li>
-<span class="fa-li"><i class="fas fa-table"></i></span> The output here is in the tabular form.
+<span class="fa-li"><i class="fas fa-table"></i></span> The output here is in a tabular form.
 </li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>spd</span></code></pre></div>
-<p><img src="index_files/figure-html/spd-out.svg" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="index_files/figure-html/unnamed-chunk-11.svg" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="visualising-experimental-designs" class="section level1" style="background-color:#F5EDDE;">
 <h1><span class="anu-gold">Visualising Experimental Designs</span></h1>
@@ -553,7 +576,7 @@ h2 {
 <span class="fa-li"><i class="fas fa-sign-out-alt"></i></span> The final output is a <strong>d</strong>esign of <strong>e</strong>xperiments as a <strong>gg</strong>plot object.
 </li>
 </ul>
-<div style="background-color:#F5EDDE; padding: 10px; font-size: 1.4em; color:#BE830E;text-align: center;">
+<div style="background-color:#F5EDDE; padding: 10px; font-size: 1.3em; color:#BE830E;text-align: center;">
 <p>Visualise your edibble design using only one command:</p>
 <p><code>autoplot()</code></p>
 </div>
